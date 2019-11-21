@@ -1,0 +1,15 @@
+/.idea/
+/.settings/
+/.project
+/.includepath
+/blib/
+/MYMETA.json
+/MYMETA.yml
+/Makefile
+/pm_to_blib
+/*.tar.gz
+/_Deparsed_XSubs.pm
+*.lock
+*.bak
+/*.tar
+/cover_db/

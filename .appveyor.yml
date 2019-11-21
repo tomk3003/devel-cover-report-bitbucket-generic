@@ -1,0 +1,17 @@
+platform: x64
+
+skip_tags: true
+
+cache:
+  - C:\strawberry
+
+install:
+  - cmd: if not exist "C:\strawberry" cinst strawberryperl
+  - cmd: set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%
+  - cpanm --installdeps --notest --quiet .
+
+test_script:
+  - prove -Ilib -m -v
+
+build: off
