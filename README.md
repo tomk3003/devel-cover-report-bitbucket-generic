@@ -1,2 +1,2 @@
-# devel-cover-report-bitbucket_generic
+# devel-cover-report-bitbucket-generic
 Bitbucket generic backend for Devel::Cover
