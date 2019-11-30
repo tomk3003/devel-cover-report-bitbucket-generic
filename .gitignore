@@ -13,3 +13,4 @@
 *.bak
 /*.tar
 /cover_db/
+/t/cover_db/bitbucket_server.json

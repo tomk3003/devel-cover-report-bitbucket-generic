@@ -5,7 +5,7 @@ use warnings;
 use Path::Tiny qw(path);
 use JSON::MaybeXS qw(encode_json);
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 
 sub report {
     my ( $pkg, $db, $options ) = @_;
@@ -17,26 +17,35 @@ sub report {
         my $f  = $cover->file($file);
         my $st = $f->statement;
         my $br = $f->branch;
+        my $cn = $f->condition;
 
         my %fdata = ( path => $file, );
 
-        my %lines = ( co => [], uc => [] );
+        my %lines = (co => [], uc => [], pc => [] );
         for my $lnr ( sort { $a <=> $b } $st->items ) {
-            my $sinfo = $st->location($lnr);
-            if ($sinfo) {
-                my $covered = 0;
-                for my $o (@$sinfo) {
-                    my $ocov = $o->covered     // 0;
-                    my $ounc = $o->uncoverable // 0;
-                    $covered |= $ocov || $ounc;
-                }
-                my $to = $covered > 0 ? 'co' : 'uc';
-                push @{ $lines{$to} }, $lnr;
+            my $sinfo = $st->location($lnr) // [];
+            my $covered = 0;
+            for my $s (@$sinfo) {
+                my $scov = $s->covered     // 0;
+                my $sunc = $s->uncoverable // 0;
+                $covered |= $scov || $sunc;
             }
+            my $sto = $covered > 0 ? 'co' : 'uc';
+            my $binfo = $br->location($lnr) // [];
+            my $cinfo = $cn->location($lnr) // [];
+            my $btot = my $bcov = 0;
+            for my $b ( @$binfo, @$cinfo ) {
+                $btot += $b->total;
+                $bcov += $b->covered;
+            }
+            my $bto = $bcov == $btot ? 'co' : ($bcov == 0 ? 'uc' : 'pc');
+            my $to = $sto eq 'uc' ? 'uc' : ( $bto eq 'co' ? 'co': 'pc');
+            push @{ $lines{$to} }, $lnr;
         }
         my $co_str = @{ $lines{co} } ? 'C:' . join( ',', @{ $lines{co} } ) : '';
         my $uc_str = @{ $lines{uc} } ? 'U:' . join( ',', @{ $lines{uc} } ) : '';
-        $fdata{coverage} = "$co_str;$uc_str";
+        my $pc_str = @{ $lines{pc} } ? 'P:' . join( ',', @{ $lines{pc} } ) : '';
+        $fdata{coverage} = "$co_str;$uc_str;$pc_str";
         push @cfiles, \%fdata;
     }
 
