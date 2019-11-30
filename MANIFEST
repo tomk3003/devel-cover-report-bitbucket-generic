@@ -5,8 +5,6 @@ Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
 t/01_basic.t
-t/cover_db/bitbucket_generic.json
-t/cover_db/bitbucket_server.json
 t/cover_db/cover.14
 t/cover_db/digests
 t/cover_db/structure/47fffd7cf202bad8f69425a094875724

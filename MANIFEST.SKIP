@@ -9,4 +9,4 @@
 ^README\.md
 ^_Deparsed_XSubs.pm
 ^cover_db
-^t/cover_db/sonar_generic.xml
+^t/cover_db/bitbucket_server.json
